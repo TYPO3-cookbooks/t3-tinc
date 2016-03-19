@@ -1,0 +1,12 @@
+{
+  "name": "ms01.typo3.vagrant",
+  "normal": {
+    "t3-tinc": {
+      "pub_key": "12345"
+    }
+  },
+  "automatic": {
+    "hostname": "ms01",
+    "fqdn": "ms01.typo3.vagrant"
+  }
+}

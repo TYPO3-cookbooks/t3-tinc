@@ -1,0 +1,4 @@
+#!/bin/sh
+
+brctl delif br-int $INTERFACE
+ip link set $INTERFACE down

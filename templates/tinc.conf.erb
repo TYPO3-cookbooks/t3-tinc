@@ -1,0 +1,7 @@
+Name = <%= @name %>
+Mode = switch
+Device = /dev/net/tun
+AddressFamily = ipv4
+<% @hosts_ConnectTo.sort.each do |connect_to| %>
+ConnectTo = <%= connect_to %>
+<% end -%>
