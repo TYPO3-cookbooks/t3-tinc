@@ -35,7 +35,8 @@ ruby_block "save-pub-key" do
 end
 
 hosts_ConnectTo = []
-peers = search(:node, "t3-tinc:*")
+# Search for all nodes that have node[t3-tinc][pub_key]
+peers = search(:node, "t3-tinc_pub_key:*")
 Chef::Log.info peers.to_s
 
 peers.each do |peer|
