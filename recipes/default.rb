@@ -15,6 +15,7 @@ directory "/etc/tinc/#{network}/hosts"
   template "/etc/tinc/#{network}/tinc-#{action}" do
     source "tinc-#{action}.erb"
     mode "0755"
+    notifies :restart, "service[tinc]"
   end
 end
 
@@ -47,6 +48,7 @@ peers.each do |peer|
       :address => peer['fqdn'],
       :pub_key => peer['t3-tinc']['pub_key']
     )
+    notifies :restart, "service[tinc]"
   end
 end
 
@@ -56,8 +58,13 @@ template "/etc/tinc/#{network}/tinc.conf" do
     :name => node['hostname'],
     :hosts_ConnectTo => hosts_ConnectTo
   )
+  notifies :restart, "service[tinc]"
 end
 
 file "/etc/tinc/nets.boot" do
   content network + "\n"
+end
+
+service "tinc" do
+  action [ :enable, :start ]
 end
