@@ -40,9 +40,6 @@ peers = search(:node, "t3-tinc_pub_key:*")
 Chef::Log.info peers.to_s
 
 peers.each do |peer|
-  next if peer['fqdn'] == node['fqdn']
-  hosts_ConnectTo << peer['hostname']
-
   template "/etc/tinc/#{network}/hosts/#{peer['hostname']}" do
     source "host.erb"
     variables(
@@ -51,6 +48,8 @@ peers.each do |peer|
     )
     notifies :restart, "service[tinc]"
   end
+
+  hosts_ConnectTo << peer['hostname'] unless peer['fqdn'] == node['fqdn']
 end
 
 template "/etc/tinc/#{network}/tinc.conf" do
