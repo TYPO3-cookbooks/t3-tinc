@@ -40,7 +40,7 @@ ruby_block "save-pubkey" do
   block do
     pubkey_content = OpenSSL::PKey::RSA.new(File.read("/etc/tinc/#{network}/rsa_key.priv")).public_key
     File.write("/etc/tinc/#{network}/rsa_key.pub", pubkey_content)
-    node.set_unless['t3-tinc']['pub_key'] = pubkey_content
+    node.set['t3-tinc']['pub_key'] = pubkey_content
   end
   action :nothing
 end
