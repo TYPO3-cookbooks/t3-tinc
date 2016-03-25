@@ -12,7 +12,7 @@ package "tinc"
 # we want to override the options passed to `tincd` and include the --logfile option
 template "/etc/default/tinc" do
   source "tinc.default.erb"
-  mode 0655
+  mode 0644
   notifies :restart, "service[tinc]"
 end
 
