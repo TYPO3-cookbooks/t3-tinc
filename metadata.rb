@@ -4,7 +4,8 @@ maintainer_email 'michael.stucki@typo3.org'
 license          'Apache 2.0'
 description      'Tinc Virtual Private Network'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '1.0.2'
+version          '1.0.3'
+
 supports         'debian'
 
 depends          't3-base', '~> 0.2'
