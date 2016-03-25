@@ -23,13 +23,14 @@ directory "/etc/tinc/#{network}/hosts"
   template "/etc/tinc/#{network}/tinc-#{action}" do
     source "tinc-#{action}.erb"
     mode "0755"
-    notifies :restart, "service[tinc]"
+    notifies :reload, "service[tinc]"
   end
 end
 
 openssl_rsa_key "/etc/tinc/#{network}/rsa_key.priv" do
   key_length 4096
   notifies :run, "ruby_block[save-pubkey]"
+  notifies :reload, "service[tinc]"
 end
 
 # as the openssl cookbook does not offer a way to write a public key file,
@@ -56,7 +57,7 @@ peers.each do |peer|
       :address => peer['fqdn'],
       :pub_key => peer['t3-tinc']['pub_key']
     )
-    notifies :restart, "service[tinc]"
+    notifies :reload, "service[tinc]"
   end
 
   hosts_ConnectTo << peer['hostname'] unless peer['fqdn'] == node['fqdn']
@@ -68,7 +69,7 @@ template "/etc/tinc/#{network}/tinc.conf" do
     :name => node['hostname'],
     :hosts_ConnectTo => hosts_ConnectTo
   )
-  notifies :restart, "service[tinc]"
+  notifies :reload, "service[tinc]"
 end
 
 file "/etc/tinc/nets.boot" do
