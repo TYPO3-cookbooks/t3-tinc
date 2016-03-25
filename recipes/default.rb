@@ -3,6 +3,7 @@
 Installs tinc
 #>
 =end
+require 'openssl'
 
 network = "t3o"
 
@@ -19,19 +20,21 @@ directory "/etc/tinc/#{network}/hosts"
   end
 end
 
-openssl_x509 "/etc/tinc/#{network}/rsa_key.pub" do
-  common_name node['fqdn']
-  org "TYPO3"
-  org_unit ""
-  country "DE"
-  key_file "/etc/tinc/#{network}/rsa_key.priv"
+openssl_rsa_key "/etc/tinc/#{network}/rsa_key.priv" do
   key_length 4096
+  notifies :run, "ruby_block[save-pubkey]"
 end
 
-ruby_block "save-pub-key" do
+# as the openssl cookbook does not offer a way to write a public key file,
+# we have to derive it from the private key, write it to file as well as
+# save it as a node attribute so that our peers can read it.
+ruby_block "save-pubkey" do
   block do
-    node.set_unless['t3-tinc']['pub_key'] = File.read("/etc/tinc/#{network}/rsa_key.pub")
+    pubkey_content = OpenSSL::PKey::RSA.new(File.read("/etc/tinc/#{network}/rsa_key.priv")).public_key
+    File.write("/etc/tinc/#{network}/rsa_key.pub", pubkey_content)
+    node.set_unless['t3-tinc']['pub_key'] = pubkey_content
   end
+  action :nothing
 end
 
 hosts_ConnectTo = []
