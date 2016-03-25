@@ -9,6 +9,13 @@ network = "t3o"
 
 package "tinc"
 
+# we want to override the options passed to `tincd` and include the --logfile option
+template "/etc/default/tinc" do
+  source "tinc.default.erb"
+  mode 0655
+  notifies :restart, "service[tinc]"
+end
+
 directory "/etc/tinc/#{network}"
 directory "/etc/tinc/#{network}/hosts"
 
