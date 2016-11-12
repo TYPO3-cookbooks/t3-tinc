@@ -7,7 +7,7 @@ require 'openssl'
 
 network = "t3o"
 
-package "tinc"
+package ["tinc", "bridge-utils"]
 
 # we want to override the options passed to `tincd` and include the --logfile option
 template "/etc/default/tinc" do
