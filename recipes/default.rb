@@ -31,6 +31,9 @@ openssl_rsa_key "/etc/tinc/#{network}/rsa_key.priv" do
   key_length 4096
   notifies :run, "ruby_block[save-pubkey]"
   notifies :reload, "service[tinc]"
+  # ideally, openssl_rsa_key should not trigger notifications, but it does.. see
+  # https://github.com/chef-cookbooks/openssl/issues/46
+  not_if { ::File.exist?("/etc/tinc/#{network}/rsa_key.priv") }
 end
 
 # as the openssl cookbook does not offer a way to write a public key file,
